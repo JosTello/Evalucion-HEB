@@ -1,1 +1,1597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UDEM - Evaluación de Proyecto | HEB - Colaboración</title>
 
+  <!-- Tipografías Tecno-minimalistas: Space Grotesk (Títulos), Plus Jakarta Sans (Cuerpo), JetBrains Mono (Datos) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome & QRCode Library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    :root {
+      /* Paleta Liquid Glass: Blanco, Rojo y Negro */
+      --bg-base: #F4F4F6;
+      --bg-glass-card: rgba(255, 255, 255, 0.78);
+      --bg-glass-input: rgba(244, 244, 246, 0.75);
+      --border-glass: rgba(255, 255, 255, 0.95);
+      --border-subtle: rgba(15, 15, 18, 0.14);
+
+      --pure-white: #FFFFFF;
+      --pure-black: #09090B;
+      --charcoal: #18181B;
+      --text-primary: #09090B;
+      --text-secondary: #27272A;
+      --text-muted: #52525B;
+
+      /* Rojo Corporativo / Acento Principal */
+      --accent-red: #E31837;
+      --accent-red-dark: #B91C1C;
+      --accent-red-soft: rgba(227, 24, 55, 0.10);
+
+      --shadow-glass: 0 10px 30px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1);
+      --shadow-inset: inset 2px 2px 5px rgba(0, 0, 0, 0.06), inset -2px -2px 5px rgba(255, 255, 255, 0.9);
+
+      /* Tipografías Tecno-minimalistas */
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      padding: 16px;
+      line-height: 1.5;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Fondo fluido Liquid Glass en Rojo, Negro y Blanco */
+    .glass-ambient-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -1;
+      overflow: hidden;
+      background: #F4F4F6;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(95px);
+      animation: float 20s ease-in-out infinite alternate;
+    }
+
+    .blob-1 { width: 460px; height: 460px; background: rgba(227, 24, 55, 0.24); top: -120px; left: -100px; }
+    .blob-2 { width: 520px; height: 520px; background: rgba(9, 9, 11, 0.12); top: 25%; right: -160px; animation-delay: -5s; }
+    .blob-3 { width: 420px; height: 420px; background: rgba(227, 24, 55, 0.18); bottom: -120px; left: 22%; animation-delay: -10s; }
+    .blob-4 { width: 380px; height: 380px; background: rgba(255, 255, 255, 0.95); top: 55%; right: 25%; animation-delay: -15s; }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(45px, 35px) scale(1.06); }
+      100% { transform: translate(-35px, 50px) scale(0.96); }
+    }
+
+    h1, h2, h3, h4, .brand-title, .panel-title, .score-card-title, .modal-title, .pool-section-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      text-transform: uppercase;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+    }
+
+    .glass-panel {
+      background: var(--bg-glass-card);
+      backdrop-filter: blur(22px) saturate(160%);
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
+      border: 1px solid var(--border-glass);
+      border-radius: 20px;
+      box-shadow: var(--shadow-glass);
+    }
+
+    /* Header Bar */
+    header {
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-tag {
+      background: var(--accent-red);
+      color: var(--pure-white);
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(227, 24, 55, 0.3);
+      letter-spacing: 0.5px;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      color: var(--pure-black);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      background: var(--pure-white);
+      border: 1px solid var(--border-subtle);
+      color: var(--pure-black);
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.22s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-action:hover {
+      background: var(--pure-black);
+      border-color: var(--pure-black);
+      color: var(--pure-white);
+      transform: translateY(-2px);
+    }
+
+    /* Evaluator Bar */
+    .evaluator-bar {
+      padding: 14px 24px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .evaluator-bar label {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--pure-black);
+    }
+
+    .evaluator-bar input {
+      flex: 1;
+      min-width: 250px;
+      background: var(--bg-glass-input);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--pure-black);
+      outline: none;
+      box-shadow: var(--shadow-inset);
+      transition: all 0.2s;
+    }
+
+    .evaluator-bar input:focus {
+      border-color: var(--accent-red);
+      background: var(--pure-white);
+    }
+
+    /* Main Grid Layout */
+    .app-body {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      .app-body { grid-template-columns: 1fr; }
+    }
+
+    /* Cards & Panels */
+    .panel-card {
+      padding: 24px;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 1.2rem;
+      color: var(--pure-black);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-title i {
+      color: var(--accent-red);
+    }
+
+    .panel-badge {
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      background: var(--pure-white);
+      color: var(--pure-black);
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Project Info Banner (Proyecto Único) */
+    .project-banner {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.75));
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-left: 6px solid var(--accent-red);
+      border-radius: 18px;
+      padding: 22px 26px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-glass);
+    }
+
+    .project-tag-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-red);
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .project-banner h2 {
+      font-size: 1.65rem;
+      color: var(--pure-black);
+      margin-bottom: 12px;
+      line-height: 1.25;
+    }
+
+    .members-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .member-pill {
+      background: var(--pure-black);
+      color: var(--pure-white);
+      font-size: 0.84rem;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .member-pill i {
+      color: var(--accent-red);
+      font-size: 0.75rem;
+    }
+
+    /* Section 1: Knobs */
+    .dials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 18px;
+    }
+
+    .dial-card {
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 18px 12px;
+      text-align: center;
+      cursor: ns-resize;
+      transition: all 0.25s;
+      user-select: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .dial-card:hover {
+      background: var(--pure-white);
+      border-color: var(--accent-red);
+      transform: translateY(-2px);
+    }
+
+    .dial-label {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .dial-svg {
+      width: 76px;
+      height: 76px;
+      pointer-events: none;
+      margin: 0 auto;
+      display: block;
+    }
+
+    .dial-val {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--pure-black);
+      margin-top: 8px;
+    }
+
+    /* Section 2: Sliders */
+    .slider-row { margin-bottom: 20px; }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .slider-header span.val {
+      font-family: var(--font-mono);
+      color: var(--accent-red);
+      background: var(--pure-white);
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      border: 1px solid var(--border-subtle);
+    }
+
+    input[type=range] {
+      width: 100%;
+      height: 8px;
+      background: rgba(9, 9, 11, 0.12);
+      border-radius: 4px;
+      accent-color: var(--accent-red);
+      cursor: pointer;
+      box-shadow: var(--shadow-inset);
+    }
+
+    /* Section 3: Matrix 2D (Blanco, Rojo y Negro) */
+    .matrix-container {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      background: var(--pure-white);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 16px;
+      cursor: crosshair;
+      overflow: hidden;
+      box-shadow: var(--shadow-glass);
+    }
+
+    .matrix-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+
+    .quadrant {
+      padding: 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .quadrant.q1 {
+      text-align: right;
+      align-items: flex-end;
+      background: rgba(227, 24, 55, 0.18);
+      color: var(--accent-red-dark);
+      border-left: 1px solid rgba(9, 9, 11, 0.18);
+      border-bottom: 1px solid rgba(9, 9, 11, 0.18);
+    }
+
+    .quadrant.q2 {
+      background: rgba(227, 24, 55, 0.07);
+      color: var(--pure-black);
+      border-right: 1px solid rgba(9, 9, 11, 0.18);
+      border-bottom: 1px solid rgba(9, 9, 11, 0.18);
+    }
+
+    .quadrant.q3 {
+      justify-content: flex-end;
+      background: rgba(9, 9, 11, 0.14);
+      color: var(--pure-black);
+      border-right: 1px solid rgba(9, 9, 11, 0.18);
+      border-top: 1px solid rgba(9, 9, 11, 0.18);
+    }
+
+    .quadrant.q4 {
+      justify-content: flex-end;
+      align-items: flex-end;
+      text-align: right;
+      background: rgba(9, 9, 11, 0.05);
+      color: var(--text-secondary);
+      border-left: 1px solid rgba(9, 9, 11, 0.18);
+      border-top: 1px solid rgba(9, 9, 11, 0.18);
+    }
+
+    .matrix-point {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: var(--accent-red);
+      border: 3px solid var(--pure-white);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      box-shadow: 0 0 0 2px var(--pure-black), 0 4px 12px rgba(227, 24, 55, 0.5);
+    }
+
+    /* Section 4: Rubric Table */
+    .table-wrapper { overflow-x: auto; }
+
+    .rubric-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.88rem;
+    }
+
+    .rubric-table th, .rubric-table td {
+      border: 1px solid var(--border-subtle);
+      padding: 10px 12px;
+      text-align: center;
+    }
+
+    .rubric-table th {
+      background: rgba(9, 9, 11, 0.05);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--pure-black);
+    }
+
+    .rubric-table td.criterion-name {
+      text-align: left;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.85);
+      color: var(--pure-black);
+      width: 28%;
+    }
+
+    .rubric-btn {
+      width: 100%;
+      padding: 8px 4px;
+      background: var(--pure-white);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .rubric-btn:hover {
+      border-color: var(--pure-black);
+      color: var(--pure-black);
+    }
+
+    .rubric-btn.selected {
+      background: var(--pure-black);
+      color: var(--pure-white);
+      border-color: var(--pure-black);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Pool de Recomendaciones */
+    .pool-section-title {
+      font-size: 1rem;
+      color: var(--pure-black);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pool-section-title i {
+      color: var(--accent-red);
+    }
+
+    .pool-table-wrapper {
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      overflow: hidden;
+    }
+
+    .pool-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .pool-table th {
+      background: var(--pure-black);
+      padding: 12px 14px;
+      text-align: left;
+      color: var(--pure-white);
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      letter-spacing: 0.4px;
+    }
+
+    .pool-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      vertical-align: middle;
+    }
+
+    .pool-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .pool-table tr:hover { background: var(--pure-white); }
+
+    .pool-table tr.selected-row {
+      background: var(--accent-red-soft);
+    }
+
+    .category-badge {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--pure-black);
+      color: var(--pure-white);
+      text-transform: uppercase;
+    }
+
+    .custom-textarea {
+      width: 100%;
+      min-height: 110px;
+      background: var(--bg-glass-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      color: var(--pure-black);
+      outline: none;
+      resize: vertical;
+      box-shadow: var(--shadow-inset);
+      transition: border-color 0.2s;
+    }
+
+    .custom-textarea:focus {
+      border-color: var(--accent-red);
+      background: var(--pure-white);
+    }
+
+    .selected-recs-box {
+      background: var(--pure-white);
+      border: 1px dashed var(--accent-red);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .selected-recs-box ul {
+      padding-left: 20px;
+      font-size: 0.9rem;
+      color: var(--pure-black);
+    }
+
+    .selected-recs-box li { margin-bottom: 6px; }
+
+    /* Dictamen Radios */
+    .rec-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .rec-radio-label {
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid var(--border-subtle);
+      padding: 12px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.92rem;
+      transition: all 0.2s;
+    }
+
+    .rec-radio-label:hover { background: var(--pure-white); }
+
+    .rec-radio-label input { accent-color: var(--accent-red); }
+
+    .rec-radio-label.selected {
+      border-color: var(--accent-red);
+      background: var(--pure-white);
+      font-weight: 700;
+      color: var(--pure-black);
+      box-shadow: 0 4px 14px rgba(227, 24, 55, 0.14);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .btn-main {
+      flex: 2;
+      background: var(--accent-red);
+      color: var(--pure-white);
+      border: none;
+      padding: 15px 24px;
+      border-radius: 12px;
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 20px rgba(227, 24, 55, 0.32);
+      transition: all 0.25s;
+    }
+
+    .btn-main:hover {
+      background: var(--accent-red-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(227, 24, 55, 0.42);
+    }
+
+    .btn-secondary {
+      flex: 1;
+      background: var(--pure-white);
+      border: 1.5px solid var(--pure-black);
+      color: var(--pure-black);
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--pure-black);
+      color: var(--pure-white);
+    }
+
+    /* Sidebar Dashboard */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .score-card {
+      background: var(--pure-black);
+      color: var(--pure-white);
+      border-radius: 20px;
+      padding: 26px 24px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
+    }
+
+    .score-card-title {
+      font-size: 1.05rem;
+      color: #A1A1AA;
+      letter-spacing: 0.8px;
+    }
+
+    .score-card-number {
+      font-family: var(--font-heading);
+      font-size: 4.4rem;
+      font-weight: 700;
+      color: var(--accent-red);
+      margin: 4px 0;
+      text-shadow: 0 0 22px rgba(227, 24, 55, 0.45);
+    }
+
+    .score-card-status {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--pure-white);
+    }
+
+    .radar-wrapper {
+      width: 100%;
+      height: 230px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Modales & Toast */
+    .modal-overlay {
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(9, 9, 11, 0.55);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-card {
+      background: var(--pure-white);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      padding: 24px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+      color: var(--pure-black);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--pure-black);
+      color: var(--pure-white);
+      border-left: 4px solid var(--accent-red);
+      padding: 14px 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      display: none;
+      z-index: 2000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fondo animado Liquid Glass -->
+  <div class="glass-ambient-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="glass-panel">
+      <div class="brand">
+        <span class="brand-tag">UDEM</span>
+        <span class="brand-title">Diseño Integral — Evaluación de Proyecto</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn-action" onclick="openModal('sheetsModal')"><i class="fa-solid fa-table"></i> Google Sheets</button>
+        <button class="btn-action" onclick="openModal('qrModal')"><i class="fa-solid fa-qrcode"></i> QR App</button>
+        <button class="btn-action" onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> Exportar PDF</button>
+      </div>
+    </header>
+
+    <!-- Evaluator Input Bar -->
+    <div class="evaluator-bar glass-panel">
+      <label for="evaluatorName"><i class="fa-solid fa-user-pen" style="color: var(--accent-red);"></i> Evaluador / Profesor:</label>
+      <input type="text" id="evaluatorName" placeholder="Escribe tu nombre completo..." oninput="updateEvaluatorName(this.value)">
+    </div>
+
+    <!-- Main App Body -->
+    <main class="app-body">
+      <div class="form-column">
+        
+        <!-- Project Banner Único -->
+        <div class="project-banner">
+          <span class="project-tag-label">Proyecto Evaluado</span>
+          <h2 id="displayProjectTopic">HEB - Colaboración</h2>
+          <div class="members-list" id="displayTeamMembers"></div>
+        </div>
+
+        <!-- Section 1: Criterios Cualitativos -->
+        <div class="panel-card glass-panel">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fa-solid fa-sliders"></i> 1. Criterios Cualitativos</span>
+            <span class="panel-badge">0 - 10 PTS (Arrastra verticalmente)</span>
+          </div>
+          <div class="dials-grid">
+            <div class="dial-card" id="dial_card_innovation">
+              <span class="dial-label">Innovación & Creatividad</span>
+              <svg class="dial-svg" id="dial_svg_innovation" viewBox="0 0 76 76"></svg>
+              <div class="dial-val" id="val_innovation">0.0</div>
+            </div>
+            <div class="dial-card" id="dial_card_problem">
+              <span class="dial-label">Problemática Clara</span>
+              <svg class="dial-svg" id="dial_svg_problem" viewBox="0 0 76 76"></svg>
+              <div class="dial-val" id="val_problem">0.0</div>
+            </div>
+            <div class="dial-card" id="dial_card_objectives">
+              <span class="dial-label">Objetivos Definidos</span>
+              <svg class="dial-svg" id="dial_svg_objectives" viewBox="0 0 76 76"></svg>
+              <div class="dial-val" id="val_objectives">0.0</div>
+            </div>
+            <div class="dial-card" id="dial_card_feasibility">
+              <span class="dial-label">Viabilidad Técnica</span>
+              <svg class="dial-svg" id="dial_svg_feasibility" viewBox="0 0 76 76"></svg>
+              <div class="dial-val" id="val_feasibility">0.0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Proceso -->
+        <div class="panel-card glass-panel">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fa-solid fa-chart-line"></i> 2. Criterios de Proceso y Avance</span>
+            <span class="panel-badge">0 - 100 %</span>
+          </div>
+          
+          <div class="slider-row">
+            <div class="slider-header">
+              <span>Métodos de Investigación & Rigor Científico</span>
+              <span class="val" id="val_research">0%</span>
+            </div>
+            <input type="range" id="input_research" min="0" max="100" value="0" oninput="updateScore('research', this.value)">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-header">
+              <span>¿Son claros los entregables que se proyectan?</span>
+              <span class="val" id="val_deliverables">0%</span>
+            </div>
+            <input type="range" id="input_deliverables" min="0" max="100" value="0" oninput="updateScore('deliverables', this.value)">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-header">
+              <span>Calidad de la presentación y coherencia</span>
+              <span class="val" id="val_presentation">0%</span>
+            </div>
+            <input type="range" id="input_presentation" min="0" max="100" value="0" oninput="updateScore('presentation', this.value)">
+          </div>
+        </div>
+
+        <!-- Section 3: Matriz 2D -->
+        <div class="panel-card glass-panel">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fa-solid fa-border-all"></i> 3. Matriz 2D: Impacto vs Viabilidad</span>
+            <span class="panel-badge" id="val_matrix">X: 0.0 | Y: 0.0</span>
+          </div>
+          <div class="matrix-container" id="matrixContainer" onclick="handleMatrixClick(event)">
+            <div class="matrix-bg">
+              <div class="quadrant q2">
+                <span>II. ALTO IMPACTO</span>
+                <span>BAJA VIABILIDAD</span>
+              </div>
+              <div class="quadrant q1">
+                <span>I. ALTO IMPACTO</span>
+                <span>ALTA VIABILIDAD</span>
+              </div>
+              <div class="quadrant q3">
+                <span>III. BAJO IMPACTO</span>
+                <span>BAJA VIABILIDAD</span>
+              </div>
+              <div class="quadrant q4">
+                <span>IV. BAJO IMPACTO</span>
+                <span>ALTA VIABILIDAD</span>
+              </div>
+            </div>
+            <div class="matrix-point" id="matrixPoint" style="left: 0%; top: 100%;"></div>
+          </div>
+        </div>
+
+        <!-- Section 4: Matriz de Rúbrica -->
+        <div class="panel-card glass-panel">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fa-solid fa-list-check"></i> 4. Matriz de Rúbrica Evaluativa</span>
+            <span class="panel-badge">Niveles Cualitativos</span>
+          </div>
+          <div class="table-wrapper">
+            <table class="rubric-table">
+              <thead>
+                <tr>
+                  <th>Criterio</th>
+                  <th>Insuficiente (25%)</th>
+                  <th>Aceptable (50%)</th>
+                  <th>Bueno (75%)</th>
+                  <th>Excelente (100%)</th>
+                </tr>
+              </thead>
+              <tbody id="rubricBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 5: Recomendaciones & Pool -->
+        <div class="panel-card glass-panel">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fa-solid fa-comment-dots"></i> 5. Recomendaciones & Dictamen del Profesor</span>
+          </div>
+
+          <div class="pool-section-title"><i class="fa-solid fa-gavel"></i> Dictamen Final del Proyecto:</div>
+          <div class="rec-options" id="recommendationList"></div>
+
+          <div style="margin-top: 24px; border-top: 1px solid var(--border-subtle); padding-top: 20px;">
+            <div class="pool-section-title">
+              <i class="fa-solid fa-list-ul"></i> Pool de Recomendaciones Sugeridas:
+            </div>
+            
+            <div class="pool-table-wrapper">
+              <table class="pool-table">
+                <thead>
+                  <tr>
+                    <th style="width: 55px; text-align: center;">Usar</th>
+                    <th style="width: 150px;">Categoría</th>
+                    <th>Recomendación Estándar</th>
+                  </tr>
+                </thead>
+                <tbody id="poolTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="selected-recs-box">
+              <div class="pool-section-title" style="margin-bottom: 8px;">
+                <i class="fa-solid fa-clipboard-check"></i> Recomendaciones Seleccionadas:
+              </div>
+              <div id="selectedRecsDisplay" style="color: var(--text-muted); font-size: 0.9rem;">
+                No has seleccionado recomendaciones del pool aún.
+              </div>
+            </div>
+
+            <div class="pool-section-title" style="margin-top: 20px;">
+              <i class="fa-solid fa-pen-to-square"></i> Observaciones Adicionales / Notas Personalizadas:
+            </div>
+            <textarea class="custom-textarea" id="customFeedback" placeholder="Escribe observaciones adicionales específicas para el equipo de HEB - Colaboración..." oninput="updateCustomFeedback(this.value)"></textarea>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn-main" onclick="saveCurrentEvaluation()">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Confirmar & Guardar Evaluación
+          </button>
+          <button class="btn-secondary" onclick="resetCurrentEvaluation()">
+            <i class="fa-solid fa-rotate-left"></i> Limpiar
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Sidebar Dashboard -->
+      <div class="sidebar">
+        <div class="score-card">
+          <div class="score-card-title">CALIFICACIÓN GLOBAL</div>
+          <div class="score-card-number" id="globalScoreDisplay">0.0</div>
+          <div class="score-card-status" id="statusDisplay">ESTATUS: [ NO EVALUADO ]</div>
+        </div>
+
+        <div class="panel-card glass-panel">
+          <div class="panel-header" style="margin-bottom: 10px;">
+            <span class="panel-title" style="font-size: 1rem;">Perfil del Proyecto</span>
+          </div>
+          <div class="radar-wrapper">
+            <svg id="radarSvg" width="240" height="200" viewBox="0 0 240 200"></svg>
+          </div>
+        </div>
+
+        <div class="panel-card glass-panel">
+          <div class="panel-header" style="margin-bottom: 10px;">
+            <span class="panel-title" style="font-size: 1rem;">Resumen en Tiempo Real</span>
+          </div>
+          <div id="summaryText" style="font-size: 0.88rem; font-family: var(--font-mono); color: var(--text-secondary); white-space: pre-line;">
+            Modifica cualquier parámetro para visualizar en tiempo real.
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modales -->
+  <div class="modal-overlay" id="sheetsModal">
+    <div class="modal-card">
+      <div class="modal-title"><i class="fa-solid fa-table" style="color: var(--accent-red);"></i> Configuración de Google Sheets</div>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">
+        Pega la URL de tu Web App de Google Apps Script (que termina en <code>/exec</code>):
+      </p>
+      <input type="text" id="sheetsUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="width: 100%; padding: 10px; border: 1px solid var(--border-subtle); border-radius: 8px; font-size: 0.85rem; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button class="btn-action" style="background: var(--accent-red); color: #FFF; border-color: var(--accent-red);" onclick="saveSheetsUrl()">Guardar URL</button>
+        <button class="btn-action" onclick="closeModal('sheetsModal')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-card" style="text-align: center;">
+      <div class="modal-title"><i class="fa-solid fa-qrcode" style="color: var(--accent-red);"></i> Código QR App</div>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 16px;">Escanea para abrir en dispositivo móvil:</p>
+      <div id="qrcodeCanvas" style="display: flex; justify-content: center; margin: 0 auto 16px auto; padding: 10px; background: #FFF; border-radius: 12px; border: 1px solid var(--border-subtle); width: fit-content;"></div>
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); word-break: break-all;" id="currentAppUrl"></div>
+      <div style="margin-top: 18px;">
+        <button class="btn-action" onclick="closeModal('qrModal')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toastMsg"></div>
+
+  <script>
+    const PROJECT = {
+      topic: "HEB - Colaboración",
+      members: [
+        "Becerra Rosas, Cecilia A.",
+        "Cruz Leal, Eugenio G.",
+        "Lammoglia Cardoso, Sofía",
+        "Maldonado Ríos, Ana Paula"
+      ]
+    };
+
+    const RUBRIC_CRITERIA = [
+      "Relevancia de la investigación",
+      "Avance del Marco Teórico",
+      "Analítica de Usuario / Mercado",
+      "Desarrollo Formal / Estético",
+      "Sostenibilidad / Impacto",
+      "Documentación Técnica"
+    ];
+
+    const RECOMMENDATIONS = [
+      "Aceptado sin cambios",
+      "Aceptado con correcciones menores obligatorias",
+      "Aceptado condicionalmente (Requiere reunión de seguimiento para ajustes mayores)",
+      "Rechazado (Necesita nueva presentación tras reformulación completa)"
+    ];
+
+    const RECOMMENDATION_POOL = [
+      { id: "p1", category: "Investigación", text: "Profundizar en la validación directa con usuarios finales del segmento objetivo." },
+      { id: "p2", category: "Viabilidad", text: "Revisar la factibilidad de manufactura, proveedores locales y estimación de costos unitarios." },
+      { id: "p3", category: "Presentación", text: "Mejorar la sintaxis visual y la legibilidad gráfica de los diagramas explicativos." },
+      { id: "p4", category: "Estrategia", text: "Definir con mayor precisión la propuesta de valor cuantitativa frente a competidores." },
+      { id: "p5", category: "Teoría", text: "Fortalecer el sustento técnico y citación en el marco teórico de la investigación." },
+      { id: "p6", category: "Diseño", text: "Ajustar la ergonomía, dimensiones antropométricas e interacción de uso principal." },
+      { id: "p7", category: "Entregables", text: "Presentar un prototipo funcional físico/digital de alta fidelidad para la siguiente entrega." },
+      { id: "p8", category: "Sostenibilidad", text: "Incorporar el análisis de ciclo de vida (LCA) y selección sustentable de materiales." }
+    ];
+
+    let evaluatorName = "";
+    let googleSheetsUrl = localStorage.getItem("udem_heb_sheets_url") || "";
+
+    function getEmptyEvaluation() {
+      return {
+        evaluated: false,
+        innovation: 0,
+        problem: 0,
+        objectives: 0,
+        feasibility: 0,
+        research: 0,
+        deliverables: 0,
+        presentation: 0,
+        matrixX: 0,
+        matrixY: 0,
+        rubric: {},
+        recommendation: "",
+        selectedPoolIds: [],
+        customFeedback: ""
+      };
+    }
+
+    let evaluation = getEmptyEvaluation();
+
+    window.onload = function() {
+      renderProjectHeader();
+      renderRubricTable();
+      renderRecommendations();
+      renderPoolTable();
+      initDialDragEvents();
+      loadProjectData();
+      if(googleSheetsUrl) document.getElementById("sheetsUrlInput").value = googleSheetsUrl;
+    };
+
+    /* Arrastre de Knobs */
+    let activeDialKey = null;
+    let startY = 0;
+    let startVal = 0;
+
+    function initDialDragEvents() {
+      const keys = ['innovation', 'problem', 'objectives', 'feasibility'];
+      keys.forEach(key => {
+        const card = document.getElementById(`dial_card_${key}`);
+        if(card) {
+          card.addEventListener('mousedown', (e) => startDialDrag(e, key));
+          card.addEventListener('touchstart', (e) => startDialDrag(e.touches[0], key), {passive: true});
+        }
+      });
+
+      window.addEventListener('mousemove', doDialDrag);
+      window.addEventListener('touchmove', (e) => { if(activeDialKey) doDialDrag(e.touches[0]); });
+      window.addEventListener('mouseup', stopDialDrag);
+      window.addEventListener('touchend', stopDialDrag);
+    }
+
+    function startDialDrag(e, key) {
+      activeDialKey = key;
+      startY = e.clientY;
+      startVal = evaluation[key] || 0;
+    }
+
+    function doDialDrag(e) {
+      if(!activeDialKey) return;
+      const deltaY = startY - e.clientY;
+      let newVal = startVal + (deltaY / 15.0);
+      newVal = Math.max(0, Math.min(10, Math.round(newVal * 10) / 10));
+      updateScore(activeDialKey, newVal);
+    }
+
+    function stopDialDrag() { activeDialKey = null; }
+
+    /* Render UI */
+    function renderProjectHeader() {
+      document.getElementById("displayProjectTopic").innerText = PROJECT.topic;
+      const membersContainer = document.getElementById("displayTeamMembers");
+      membersContainer.innerHTML = PROJECT.members.map(member => `
+        <span class="member-pill"><i class="fa-solid fa-user"></i> ${member}</span>
+      `).join('');
+    }
+
+    function renderRubricTable() {
+      const tbody = document.getElementById("rubricBody");
+      tbody.innerHTML = RUBRIC_CRITERIA.map((criterion, idx) => {
+        return `
+          <tr>
+            <td class="criterion-name">${criterion}</td>
+            ${[0.25, 0.5, 0.75, 1.0].map(val => `
+              <td>
+                <button class="rubric-btn" id="rubric_${idx}_${val}" onclick="selectRubric(${idx}, ${val})">
+                  ${val * 100}%
+                </button>
+              </td>
+            `).join('')}
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderRecommendations() {
+      const container = document.getElementById("recommendationList");
+      container.innerHTML = RECOMMENDATIONS.map((rec, i) => `
+        <label class="rec-radio-label" id="rec_label_${i}">
+          <input type="radio" name="dictamen" value="${rec}" onchange="setRecommendation('${rec}', ${i})">
+          <span>${rec}</span>
+        </label>
+      `).join('');
+    }
+
+    function renderPoolTable() {
+      const tbody = document.getElementById("poolTableBody");
+      tbody.innerHTML = RECOMMENDATION_POOL.map(item => `
+        <tr id="pool_row_${item.id}">
+          <td style="text-align: center;">
+            <input type="checkbox" id="chk_pool_${item.id}" onchange="togglePoolItem('${item.id}')" style="width: 18px; height: 18px; accent-color: var(--accent-red); cursor: pointer;">
+          </td>
+          <td><span class="category-badge">${item.category}</span></td>
+          <td><label for="chk_pool_${item.id}" style="cursor: pointer; font-weight: 500;">${item.text}</label></td>
+        </tr>
+      `).join('');
+    }
+
+    function togglePoolItem(poolId) {
+      const currentRecs = evaluation.selectedPoolIds || [];
+      const index = currentRecs.indexOf(poolId);
+      
+      if (index > -1) {
+        currentRecs.splice(index, 1);
+      } else {
+        currentRecs.push(poolId);
+      }
+      
+      evaluation.selectedPoolIds = currentRecs;
+      updatePoolUI();
+      recalculate();
+    }
+
+    function updatePoolUI() {
+      const selected = evaluation.selectedPoolIds || [];
+      RECOMMENDATION_POOL.forEach(item => {
+        const chk = document.getElementById(`chk_pool_${item.id}`);
+        const row = document.getElementById(`pool_row_${item.id}`);
+        const isChecked = selected.includes(item.id);
+        if(chk) chk.checked = isChecked;
+        if(row) {
+          if(isChecked) row.classList.add('selected-row');
+          else row.classList.remove('selected-row');
+        }
+      });
+
+      const display = document.getElementById("selectedRecsDisplay");
+      if (selected.length === 0) {
+        display.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No has seleccionado recomendaciones del pool aún.</span>`;
+      } else {
+        const listItems = selected.map(id => {
+          const item = RECOMMENDATION_POOL.find(p => p.id === id);
+          return `<li><strong>[${item.category}]</strong> ${item.text}</li>`;
+        }).join('');
+        display.innerHTML = `<ul>${listItems}</ul>`;
+      }
+    }
+
+    function loadProjectData() {
+      const data = evaluation;
+
+      ['innovation', 'problem', 'objectives', 'feasibility'].forEach(k => {
+        updateDialSVG(k, data[k]);
+        document.getElementById(`val_${k}`).innerText = data[k].toFixed(1);
+      });
+
+      ['research', 'deliverables', 'presentation'].forEach(k => {
+        document.getElementById(`input_${k}`).value = data[k];
+        document.getElementById(`val_${k}`).innerText = `${data[k]}%`;
+      });
+
+      updateMatrixPointUI(data.matrixX, data.matrixY);
+      updateRubricUI();
+
+      RECOMMENDATIONS.forEach((rec, i) => {
+        const lbl = document.getElementById(`rec_label_${i}`);
+        const input = lbl.querySelector('input');
+        if (data.recommendation === rec) {
+          input.checked = true;
+          lbl.classList.add('selected');
+        } else {
+          input.checked = false;
+          lbl.classList.remove('selected');
+        }
+      });
+
+      updatePoolUI();
+      document.getElementById("customFeedback").value = data.customFeedback || "";
+
+      recalculate();
+    }
+
+    function updateScore(key, val) {
+      evaluation[key] = parseFloat(val);
+      if (['innovation', 'problem', 'objectives', 'feasibility'].includes(key)) {
+        updateDialSVG(key, parseFloat(val));
+        document.getElementById(`val_${key}`).innerText = parseFloat(val).toFixed(1);
+      } else {
+        document.getElementById(`val_${key}`).innerText = `${val}%`;
+      }
+      recalculate();
+    }
+
+    function updateDialSVG(key, val) {
+      const svg = document.getElementById(`dial_svg_${key}`);
+      if (!svg) return;
+
+      const pct = Math.max(0, Math.min(1, val / 10));
+      const cx = 38, cy = 38, r = 28;
+      const circumference = 175.93;
+      const arcLength = 131.95;
+      const activeLength = arcLength * pct;
+
+      const angleDeg = 135 + (pct * 270);
+      const angleRad = angleDeg * (Math.PI / 180);
+
+      const rIn = 12;
+      const rOut = 23;
+      const x1 = cx + rIn * Math.cos(angleRad);
+      const y1 = cy + rIn * Math.sin(angleRad);
+      const x2 = cx + rOut * Math.cos(angleRad);
+      const y2 = cy + rOut * Math.sin(angleRad);
+
+      svg.innerHTML = `
+        <defs>
+          <linearGradient id="dialGrad_${key}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#E31837" />
+            <stop offset="100%" stop-color="#09090B" />
+          </linearGradient>
+        </defs>
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(9, 9, 11, 0.1)" stroke-width="6"
+                stroke-dasharray="${arcLength.toFixed(2)} ${circumference.toFixed(2)}"
+                stroke-linecap="round"
+                transform="rotate(135 ${cx} ${cy})" />
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="url(#dialGrad_${key})" stroke-width="6"
+                stroke-dasharray="${activeLength.toFixed(2)} ${circumference.toFixed(2)}"
+                stroke-linecap="round"
+                transform="rotate(135 ${cx} ${cy})" />
+        <circle cx="${cx}" cy="${cy}" r="3.5" fill="#09090B" />
+        <line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}"
+              stroke="#E31837" stroke-width="3.5" stroke-linecap="round" />
+      `;
+    }
+
+    function handleMatrixClick(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const y = Math.max(0, Math.min(1, 1 - ((e.clientY - rect.top) / rect.height)));
+      
+      evaluation.matrixX = Math.round(x * 100) / 10;
+      evaluation.matrixY = Math.round(y * 100) / 10;
+      
+      updateMatrixPointUI(evaluation.matrixX, evaluation.matrixY);
+      recalculate();
+    }
+
+    function updateMatrixPointUI(x, y) {
+      const pt = document.getElementById("matrixPoint");
+      pt.style.left = `${(x / 10) * 100}%`;
+      pt.style.top = `${(1 - (y / 10)) * 100}%`;
+      document.getElementById("val_matrix").innerText = `X: ${x.toFixed(1)} | Y: ${y.toFixed(1)}`;
+    }
+
+    function selectRubric(criterionIdx, val) {
+      evaluation.rubric[criterionIdx] = val;
+      updateRubricUI();
+      recalculate();
+    }
+
+    function updateRubricUI() {
+      const rub = evaluation.rubric;
+      RUBRIC_CRITERIA.forEach((_, idx) => {
+        [0.25, 0.5, 0.75, 1.0].forEach(val => {
+          const btn = document.getElementById(`rubric_${idx}_${val}`);
+          if (rub[idx] === val) btn.classList.add('selected');
+          else btn.classList.remove('selected');
+        });
+      });
+    }
+
+    function setRecommendation(rec, idx) {
+      evaluation.recommendation = rec;
+      RECOMMENDATIONS.forEach((_, i) => {
+        const lbl = document.getElementById(`rec_label_${i}`);
+        if(i === idx) lbl.classList.add('selected');
+        else lbl.classList.remove('selected');
+      });
+      recalculate();
+    }
+
+    function updateCustomFeedback(val) {
+      evaluation.customFeedback = val;
+      recalculate();
+    }
+
+    function updateEvaluatorName(val) { evaluatorName = val; }
+
+    /* Cálculo y Gráfica de Radar */
+    function recalculate() {
+      const d = evaluation;
+      const qualAvg = (d.innovation + d.problem + d.objectives + d.feasibility) / 4;
+      const procAvg = ((d.research + d.deliverables + d.presentation) / 3) / 10;
+      const matrixAvg = (d.matrixX + d.matrixY) / 2;
+      
+      const rubVals = Object.values(d.rubric);
+      const rubAvg = rubVals.length > 0 ? (rubVals.reduce((a, b) => a + b, 0) / RUBRIC_CRITERIA.length) * 10 : 0;
+
+      const finalScore = (qualAvg * 0.3) + (procAvg * 0.3) + (matrixAvg * 0.2) + (rubAvg * 0.2);
+      
+      document.getElementById("globalScoreDisplay").innerText = finalScore.toFixed(1);
+      
+      const statusDisp = document.getElementById("statusDisplay");
+      if(d.evaluated) {
+        statusDisp.innerText = "ESTATUS: [ EVALUADO & GUARDADO ]";
+        statusDisp.style.color = "#FFFFFF";
+      } else {
+        statusDisp.innerText = "ESTATUS: [ EN EDICIÓN ]";
+        statusDisp.style.color = "#A1A1AA";
+      }
+
+      drawRadarChart([d.innovation, d.problem, d.objectives, d.feasibility, procAvg, matrixAvg]);
+
+      const poolCount = (d.selectedPoolIds || []).length;
+      document.getElementById("summaryText").innerText = 
+        `Proyecto: ${PROJECT.topic}\n` +
+        `Cualitativo: ${qualAvg.toFixed(1)}/10\n` +
+        `Proceso: ${(procAvg*10).toFixed(0)}%\n` +
+        `Matriz 2D: X:${d.matrixX.toFixed(1)} Y:${d.matrixY.toFixed(1)}\n` +
+        `Rúbrica Completa: ${rubVals.length}/${RUBRIC_CRITERIA.length}\n` +
+        `Recomendaciones Pool: ${poolCount}\n` +
+        `Dictamen: ${d.recommendation || 'Sin seleccionar'}`;
+    }
+
+    function drawRadarChart(values) {
+      const svg = document.getElementById("radarSvg");
+      const cx = 120, cy = 100, r = 70;
+      const numPoints = values.length;
+      
+      let gridHtml = '';
+      for(let level = 1; level <= 4; level++) {
+        let levelR = (r / 4) * level;
+        let points = [];
+        for(let i = 0; i < numPoints; i++) {
+          let angle = (Math.PI * 2 / numPoints) * i - Math.PI / 2;
+          points.push(`${cx + levelR * Math.cos(angle)},${cy + levelR * Math.sin(angle)}`);
+        }
+        gridHtml += `<polygon points="${points.join(' ')}" fill="none" stroke="#09090B" stroke-width="1.2" stroke-opacity="0.45"/>`;
+      }
+
+      for(let i = 0; i < numPoints; i++) {
+        let angle = (Math.PI * 2 / numPoints) * i - Math.PI / 2;
+        let x2 = cx + r * Math.cos(angle);
+        let y2 = cy + r * Math.sin(angle);
+        gridHtml += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="#09090B" stroke-width="1" stroke-opacity="0.35"/>`;
+      }
+
+      let dataPoints = [];
+      for(let i = 0; i < numPoints; i++) {
+        let valR = (r / 10) * values[i];
+        let angle = (Math.PI * 2 / numPoints) * i - Math.PI / 2;
+        dataPoints.push(`${cx + valR * Math.cos(angle)},${cy + valR * Math.sin(angle)}`);
+      }
+
+      svg.innerHTML = `
+        ${gridHtml}
+        <polygon points="${dataPoints.join(' ')}" fill="rgba(227, 24, 55, 0.35)" stroke="#E31837" stroke-width="2.5"/>
+        ${dataPoints.map(pt => {
+          let [px, py] = pt.split(',');
+          return `<circle cx="${px}" cy="${py}" r="4" fill="#09090B" stroke="#E31837" stroke-width="1.5"/>`;
+        }).join('')}
+      `;
+    }
+
+    function saveCurrentEvaluation() {
+      if(!evaluatorName.trim()) {
+        showToast("Por favor, ingresa tu nombre como Evaluador/Profesor.");
+        return;
+      }
+      
+      evaluation.evaluated = true;
+      recalculate();
+
+      const d = evaluation;
+      const globalScore = document.getElementById("globalScoreDisplay").innerText;
+
+      const poolTexts = (d.selectedPoolIds || []).map(id => {
+        const item = RECOMMENDATION_POOL.find(p => p.id === id);
+        return item ? `[${item.category}] ${item.text}` : '';
+      }).join(" | ");
+
+      const rubricDetail = RUBRIC_CRITERIA.map((criterion, idx) => {
+        const val = d.rubric[idx] ? (d.rubric[idx] * 100) + "%" : "N/E";
+        return `${criterion}: ${val}`;
+      }).join(" | ");
+
+      const payload = {
+        evaluator: evaluatorName,
+        project: PROJECT.topic,
+        members: PROJECT.members.join("; "),
+        globalScore: parseFloat(globalScore),
+        innovation: d.innovation,
+        problem: d.problem,
+        objectives: d.objectives,
+        feasibility: d.feasibility,
+        research: d.research,
+        deliverables: d.deliverables,
+        presentation: d.presentation,
+        matrixX: d.matrixX,
+        matrixY: d.matrixY,
+        rubricDetail: rubricDetail,
+        recommendation: d.recommendation,
+        poolRecommendations: poolTexts,
+        customFeedback: d.customFeedback
+      };
+
+      if(googleSheetsUrl) {
+        showToast("Enviando evaluación a Google Sheets...");
+        fetch(googleSheetsUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        })
+        .then(() => {
+          showToast("Evaluación guardada y enviada a Google Sheets.");
+        })
+        .catch(err => {
+          console.error(err);
+          showToast("Error al conectar con Google Sheets.");
+        });
+      } else {
+        showToast("Evaluación guardada localmente (configura la URL de Google Sheets arriba para sincronizar).");
+      }
+    }
+
+    function resetCurrentEvaluation() {
+      evaluation = getEmptyEvaluation();
+      loadProjectData();
+      showToast("Campos restablecidos.");
+    }
+
+    /* Modales */
+    function openModal(id) {
+      if(id === 'qrModal') {
+        const qrContainer = document.getElementById("qrcodeCanvas");
+        qrContainer.innerHTML = "";
+        new QRCode(qrContainer, { text: window.location.href, width: 140, height: 140 });
+        document.getElementById("currentAppUrl").innerText = window.location.href;
+      }
+      document.getElementById(id).style.display = "flex";
+    }
+
+    function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+    function saveSheetsUrl() {
+      googleSheetsUrl = document.getElementById("sheetsUrlInput").value.trim();
+      localStorage.setItem("udem_heb_sheets_url", googleSheetsUrl);
+      closeModal("sheetsModal");
+      showToast("URL de Google Sheets guardada.");
+    }
+
+    function exportPDF() { window.print(); }
+
+    function showToast(msg) {
+      const t = document.getElementById("toastMsg");
+      t.innerText = msg;
+      t.style.display = "block";
+      setTimeout(() => { t.style.display = "none"; }, 3200);
+    }
+  </script>
+</body>
+</html>
